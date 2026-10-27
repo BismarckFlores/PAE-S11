@@ -4,6 +4,7 @@ module ni.edu.uam.practicaorm {
     requires org.hibernate.orm.core;
     requires jakarta.persistence;
     requires java.sql;
+    requires java.naming;
     requires io.github.cdimascio.dotenv.java;
 
     opens ni.edu.uam.practicaorm to javafx.fxml;
