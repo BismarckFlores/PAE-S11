@@ -1,9 +1,9 @@
-package edu.gestionacademica.controller;
+package ni.edu.uam.practicaorm.controller;
 
-import edu.gestionacademica.model.Estudiante;
-import edu.gestionacademica.model.EstudianteValidator;
-import edu.gestionacademica.repository.CorreoDuplicadoException;
-import edu.gestionacademica.repository.EstudianteRepository;
+import ni.edu.uam.practicaorm.model.Estudiante;
+import ni.edu.uam.practicaorm.model.EstudianteValidator;
+import ni.edu.uam.practicaorm.repository.CorreoDuplicadoException;
+import ni.edu.uam.practicaorm.repository.EstudianteRepository;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -82,7 +82,7 @@ public class EstudianteController {
     private void consultar() {
         String filtro = cmbFiltroCarrera.getValue();
         ejecutar("Consultando estudiantes…", () -> filtro == null || TODAS.equals(filtro)
-                ? repository.listar() : repository.filtrarPorCarrera(filtro), registros -> {
+                ? repository.listar() : repository.buscarPorCarrera(filtro), registros -> {
             tablaEstudiantes.getItems().setAll(registros);
             registros.stream().map(Estudiante::getCarrera).distinct().forEach(carrera -> {
                 if (!cmbFiltroCarrera.getItems().contains(carrera)) cmbFiltroCarrera.getItems().add(carrera);
@@ -134,7 +134,7 @@ public class EstudianteController {
             if (cause instanceof CorreoDuplicadoException) return cause.getMessage();
             if (cause instanceof SQLException sql) {
                 if ("28P01".equals(sql.getSQLState())) return "PostgreSQL rechazó el usuario o la contraseña. Revise la configuración local.";
-                if ("3D000".equals(sql.getSQLState())) return "No existe la base gestionacademica. Ejecute sql/01_crear_base.sql desde la base postgres.";
+                if ("3D000".equals(sql.getSQLState())) return "No existe la base gestionacademica. Créela en PostgreSQL antes de iniciar la aplicación.";
                 if (sql.getSQLState() != null && sql.getSQLState().startsWith("08"))
                     return "No hay conexión con PostgreSQL. Revise el servicio, la dirección y el puerto configurado.";
             }
